@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="application-name" content="Language Aid – Pharmacy">
+<meta name="msapplication-TileColor" content="#19478C">
+<meta name="msapplication-config" content="none">
+<meta name="theme-color" content="#19478C">
+<title>Language Aid – Pharmacy Setting (Part 1)</title>
+<style>
+  :root {
+    --navy: #19478C;
+    --sky: #3EB3E1;
+    --teal: #009CA2;
+    --white: #ffffff;
+    --light: #f0f7fb;
+    --grey: #e8eef3;
+    --dark: #1a2a3a;
+    --text: #2c3e50;
+    --muted: #6b8099;
+    --success: #27ae60;
+    --warn: #e67e22;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a5aad 60%, var(--sky) 100%);
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(25,71,140,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header .logo { display: flex; align-items: center; gap: 12px; }
+  header .logo .icon {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  header h1 { font-size: 1.2rem; font-weight: bold; letter-spacing: 0.3px; }
+  header p { font-size: 0.75rem; opacity: 0.8; }
+  #backBtn {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.82rem;
+    display: none;
+    transition: background 0.2s;
+    min-height: 44px;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  #backBtn:hover { background: rgba(255,255,255,0.28); }
+
+  /* ── PAGES ── */
+  .page { display: none; animation: fadeIn 0.35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── LANGUAGE SELECT ── */
+  #langPage {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  #langPage .hero-icon { font-size: 64px; margin-bottom: 20px; }
+  #langPage h2 { font-size: 2rem; color: var(--navy); margin-bottom: 10px; }
+  #langPage p { color: var(--muted); margin-bottom: 40px; font-size: 0.95rem; }
+  .lang-cards { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+  .lang-card {
+    background: white;
+    border: 2px solid var(--grey);
+    border-radius: 16px;
+    padding: 40px 52px;
+    cursor: pointer;
+    transition: all 0.25s;
+    min-width: 200px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  .lang-card:hover {
+    border-color: var(--sky);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(62,179,225,0.25);
+  }
+  .lang-card .flag { font-size: 48px; margin-bottom: 12px; }
+  .lang-card h3 { color: var(--navy); font-size: 1.15rem; margin-bottom: 4px; }
+  .lang-card span { color: var(--muted); font-size: 0.82rem; }
+
+  /* ── OVERALL PROGRESS ── */
+  .overall-progress {
+    background: white;
+    margin: 0 auto 28px;
+    max-width: 900px;
+    border-radius: 12px;
+    padding: 18px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .overall-progress h3 { font-size: 0.9rem; color: var(--navy); margin-bottom: 12px; }
+  .module-indicators { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mod-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 2px solid transparent;
+  }
+  .mod-badge.not-started { background: var(--grey); color: var(--muted); border-color: #d0dce6; }
+  .mod-badge.in-progress { background: #fff3cd; color: #856404; border-color: #ffc107; }
+  .mod-badge.completed { background: #d4edda; color: #155724; border-color: #28a745; }
+
+  /* ── MODULE SELECT ── */
+  #modulePage { padding: 28px 20px; }
+  #modulePage .page-header { max-width: 900px; margin: 0 auto 20px; }
+  #modulePage .page-header h2 { font-size: 1.5rem; color: var(--navy); }
+  #modulePage .page-header p { color: var(--muted); font-size: 0.88rem; }
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .module-card {
+    background: white;
+    border-radius: 14px;
+    padding: 26px;
+    cursor: pointer;
+    border: 2px solid var(--grey);
+    transition: all 0.22s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+    background: var(--sky);
+    border-radius: 14px 0 0 14px;
+  }
+  .module-card:hover {
+    border-color: var(--sky);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(62,179,225,0.2);
+  }
+  .module-card .m-icon { font-size: 28px; margin-bottom: 10px; }
+  .module-card h3 { font-size: 1rem; color: var(--navy); margin-bottom: 4px; }
+  .module-card p { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+  .module-card .status-badge {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    display: inline-block;
+  }
+  .status-not { background: var(--grey); color: var(--muted); }
+  .status-progress { background: #fff3cd; color: #856404; }
+  .status-done { background: #d4edda; color: #155724; }
+
+  /* ── LEARNING PAGE ── */
+  #learnPage { padding: 24px 20px; }
+  .learn-container { max-width: 860px; margin: 0 auto; }
+  .learn-header { margin-bottom: 22px; }
+  .learn-header h2 { font-size: 1.4rem; color: var(--navy); }
+  .learn-header p { color: var(--muted); font-size: 0.85rem; }
+
+  /* Section progress bar */
+  .section-progress-wrap { margin-bottom: 24px; }
+  .section-progress-wrap label {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: var(--muted); margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: var(--grey);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sky), var(--teal));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  /* Phrase cards */
+  .phrase-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+  .phrase-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--grey);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    transition: border-color 0.2s;
+  }
+  .phrase-card:hover { border-color: var(--sky); }
+  .phrase-card .phrase-num {
+    min-width: 30px;
+    height: 30px;
+    background: var(--navy);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+  .phrase-card .phrase-text { flex: 1; }
+  .phrase-card .phrase-text .english { font-size: 0.88rem; color: var(--muted); margin-bottom: 3px; }
+  .phrase-card .phrase-text .translation { font-size: 1.05rem; color: var(--dark); font-weight: bold; }
+  .phrase-card .phrase-text .romanized { font-size: 0.78rem; color: var(--teal); margin-top: 2px; font-style: italic; }
+  .speak-btn {
+    background: linear-gradient(135deg, var(--sky), var(--teal));
+    border: none;
+    color: white;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, opacity 0.15s;
+    flex-shrink: 0;
+    /* Ensure minimum touch target size per Microsoft guidelines */
+    min-width: 44px; min-height: 44px;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  .speak-btn:hover { transform: scale(1.1); }
+  .speak-btn:active { opacity: 0.7; transform: scale(0.96); }
+  .phrase-card.seen { border-left: 4px solid var(--teal); }
+
+  /* subsections */
+  .subsection-title {
+    background: linear-gradient(135deg, var(--navy), #1a5aad);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+    margin-top: 14px;
+  }
+
+  .quiz-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--navy), var(--sky));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: Tahoma, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .quiz-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ── QUIZ PAGE ── */
+  #quizPage { padding: 28px 20px; }
+  .quiz-container { max-width: 700px; margin: 0 auto; }
+  .quiz-container h2 { font-size: 1.4rem; color: var(--navy); margin-bottom: 6px; }
+  .quiz-container .quiz-meta { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
+
+  .question-card {
+    background: white;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .question-card .q-type {
+    font-size: 0.72rem;
+    color: var(--teal);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .question-card .q-text { font-size: 1.05rem; color: var(--dark); margin-bottom: 18px; font-weight: bold; }
+  .question-card .audio-prompt {
+    background: linear-gradient(135deg, var(--sky), var(--teal));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+    transition: opacity 0.2s;
+  }
+  .question-card .audio-prompt:hover { opacity: 0.85; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--light);
+    border: 2px solid var(--grey);
+    border-radius: 8px;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.9rem;
+    text-align: left;
+    transition: all 0.18s;
+    color: var(--text);
+    min-height: 48px;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--sky); background: #eef7fd; }
+  .option-btn.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+  .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .quiz-nav button {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.88rem;
+    font-weight: bold;
+    transition: opacity 0.2s;
+  }
+  #submitQuizBtn { background: var(--teal); color: white; }
+  #submitQuizBtn:hover { opacity: 0.85; }
+
+  .quiz-result {
+    background: white;
+    border-radius: 14px;
+    padding: 36px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .quiz-result .score-circle {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky), var(--teal));
+    color: white;
+    font-size: 1.6rem;
+    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .quiz-result h3 { font-size: 1.3rem; color: var(--navy); margin-bottom: 8px; }
+  .quiz-result p { color: var(--muted); margin-bottom: 22px; }
+  .quiz-result button {
+    background: linear-gradient(135deg, var(--navy), var(--sky));
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin: 0 6px;
+  }
+
+  /* Numbers grid */
+  .numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .num-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--grey);
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .num-card:hover { border-color: var(--sky); box-shadow: 0 4px 12px rgba(62,179,225,0.2); }
+  .num-card .num-en { font-size: 0.75rem; color: var(--muted); }
+  .num-card .num-digit { font-size: 1.6rem; font-weight: bold; color: var(--navy); }
+  .num-card .num-trans { font-size: 0.95rem; color: var(--dark); font-weight: bold; margin-top: 2px; }
+  .num-card .num-rom { font-size: 0.72rem; color: var(--teal); font-style: italic; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header h1 { font-size: 1rem; }
+    .lang-card { padding: 24px 32px; }
+    #langPage h2 { font-size: 1.5rem; }
+  }
+
+  /* ── EDGE / SURFACE TOUCH OPTIMISATIONS ── */
+  /* Coarse pointer = touchscreen (Surface, tablet, phone) */
+  @media (pointer: coarse) {
+    .phrase-card { padding: 18px 20px; gap: 18px; }
+    .num-card { padding: 18px; }
+    .module-card { padding: 28px; }
+    .speak-btn { width: 48px; height: 48px; min-width: 48px; min-height: 48px; }
+    .option-btn { padding: 16px 18px; font-size: 0.95rem; }
+    .quiz-btn { padding: 16px; font-size: 1.05rem; }
+    .cond-tab { padding: 10px 20px; font-size: 0.85rem; }
+    .lang-card { padding: 44px 56px; }
+  }
+
+  /* Edge scrollbar styling */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--grey); }
+  ::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+  .lang-flag-text { font-size: 0.7rem; opacity: 0.7; margin-top: 4px; }
+
+  /* Condition sub-nav */
+  .conditions-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;
+  }
+  .cond-tab {
+    background: white;
+    border: 2px solid var(--grey);
+    border-radius: 20px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: Tahoma, sans-serif;
+    color: var(--navy);
+    transition: all 0.18s;
+    min-height: 40px;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+  }
+  .cond-tab:hover, .cond-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="icon">💊</div>
+    <div>
+      <h1>Language Aid – Pharmacy Setting</h1>
+      <p>Part 1 · Multilingual Communication Tool</p>
+    </div>
+  </div>
+  <button id="backBtn" onclick="goBack()">← Back</button>
+</header>
+
+<!-- PAGE: Language Selection -->
+<div id="langPage" class="page active">
+  <div class="hero-icon">🌏</div>
+  <h2>Select a Language</h2>
+  <p>Choose the language you would like to learn pharmacy phrases in.</p>
+  <div class="lang-cards">
+    <div class="lang-card" onclick="selectLang('mandarin')">
+      <div class="flag">🇨🇳</div>
+      <h3>Mandarin</h3>
+      <span>普通话</span>
+      <div class="lang-flag-text">Simplified Chinese</div>
+    </div>
+    <div class="lang-card" onclick="selectLang('malay')">
+      <div class="flag">🇲🇾</div>
+      <h3>Malay</h3>
+      <span>Bahasa Melayu</span>
+      <div class="lang-flag-text">Malaysian Malay</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: Module Selection -->
+<div id="modulePage" class="page">
+  <div class="page-header">
+    <h2 id="modulePageTitle">Modules</h2>
+    <p>Select a module to begin learning</p>
+  </div>
+  <div id="overallProgress" class="overall-progress">
+    <h3>📊 Your Progress</h3>
+    <div id="moduleIndicators" class="module-indicators"></div>
+  </div>
+  <div class="module-grid" id="moduleGrid"></div>
+</div>
+
+<!-- PAGE: Learning -->
+<div id="learnPage" class="page">
+  <div class="learn-container">
+    <div class="learn-header">
+      <h2 id="learnTitle"></h2>
+      <p id="learnSubtitle"></p>
+    </div>
+    <div class="section-progress-wrap">
+      <label><span>Section Progress</span><span id="progressLabel">0%</span></label>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div id="learnContent"></div>
+    <button class="quiz-btn" onclick="startQuiz()">📝 Take Quiz for This Module</button>
+  </div>
+</div>
+
+<!-- PAGE: Quiz -->
+<div id="quizPage" class="page">
+  <div class="quiz-container">
+    <h2>📝 Module Quiz</h2>
+    <p class="quiz-meta" id="quizMeta"></p>
+    <div id="quizContent"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const CONTENT = {
+  mandarin: {
+    lang: 'zh-CN',
+    label: 'Mandarin (普通话)',
+    modules: [
+      {
+        id: 'greetings',
+        title: 'Greetings',
+        icon: '👋',
+        desc: '8 essential greeting phrases',
+        type: 'phrases',
+        items: [
+          { en: 'Good morning', t: '早上好', r: 'Zǎoshang hǎo' },
+          { en: 'Good afternoon', t: '下午好', r: 'Xiàwǔ hǎo' },
+          { en: 'Good evening', t: '晚上好', r: 'Wǎnshang hǎo' },
+          { en: 'Hi, what can I help you with?', t: '您好，我可以帮您什么？', r: 'Nín hǎo, wǒ kěyǐ bāng nín shénme?' },
+          { en: 'May I have your name & NRIC number?', t: '请问您的姓名和身份证号码？', r: 'Qǐngwèn nín de xìngmíng hé shēnfèn zhèng hàomǎ?' },
+          { en: 'Do you have any allergies?', t: '您有过敏症吗？', r: 'Nín yǒu guòmǐn zhèng ma?' },
+          { en: 'Please take a seat first and wait for the same queue number.', t: '请先坐下，等叫您的号码。', r: 'Qǐng xiān zuò xia, děng jiào nín de hàomǎ.' },
+          { en: 'Thank you.', t: '谢谢。', r: 'Xièxiè.' }
+        ]
+      },
+      {
+        id: 'numbers',
+        title: 'Numbers',
+        icon: '🔢',
+        desc: 'Numbers 1 to 20',
+        type: 'numbers',
+        items: [
+          { en: 'One', n: 1, t: '一', r: 'Yī' },
+          { en: 'Two', n: 2, t: '二', r: 'Èr' },
+          { en: 'Three', n: 3, t: '三', r: 'Sān' },
+          { en: 'Four', n: 4, t: '四', r: 'Sì' },
+          { en: 'Five', n: 5, t: '五', r: 'Wǔ' },
+          { en: 'Six', n: 6, t: '六', r: 'Liù' },
+          { en: 'Seven', n: 7, t: '七', r: 'Qī' },
+          { en: 'Eight', n: 8, t: '八', r: 'Bā' },
+          { en: 'Nine', n: 9, t: '九', r: 'Jiǔ' },
+          { en: 'Ten', n: 10, t: '十', r: 'Shí' },
+          { en: 'Eleven', n: 11, t: '十一', r: 'Shíyī' },
+          { en: 'Twelve', n: 12, t: '十二', r: 'Shí\'èr' },
+          { en: 'Thirteen', n: 13, t: '十三', r: 'Shísān' },
+          { en: 'Fourteen', n: 14, t: '十四', r: 'Shísì' },
+          { en: 'Fifteen', n: 15, t: '十五', r: 'Shíwǔ' },
+          { en: 'Sixteen', n: 16, t: '十六', r: 'Shíliù' },
+          { en: 'Seventeen', n: 17, t: '十七', r: 'Shíqī' },
+          { en: 'Eighteen', n: 18, t: '十八', r: 'Shíbā' },
+          { en: 'Nineteen', n: 19, t: '十九', r: 'Shíjiǔ' },
+          { en: 'Twenty', n: 20, t: '二十', r: 'Èrshí' }
+        ]
+      },
+      {
+        id: 'frequency',
+        title: 'Frequency & Duration',
+        icon: '⏰',
+        desc: '13 time & frequency terms',
+        type: 'phrases',
+        items: [
+          { en: 'Morning', t: '早上', r: 'Zǎoshang' },
+          { en: 'Afternoon', t: '下午', r: 'Xiàwǔ' },
+          { en: 'Evening', t: '傍晚', r: 'Bàngwǎn' },
+          { en: 'Night', t: '晚上', r: 'Wǎnshang' },
+          { en: 'Day', t: '天', r: 'Tiān' },
+          { en: 'Hour', t: '小时', r: 'Xiǎoshí' },
+          { en: 'Week', t: '周', r: 'Zhōu' },
+          { en: 'Month', t: '月', r: 'Yuè' },
+          { en: 'Year', t: '年', r: 'Nián' },
+          { en: 'Half', t: '半', r: 'Bàn' },
+          { en: 'Alternate day', t: '隔天', r: 'Gé tiān' },
+          { en: 'Before food', t: '饭前', r: 'Fàn qián' },
+          { en: 'After food', t: '饭后', r: 'Fàn hòu' }
+        ]
+      },
+      {
+        id: 'dispensing',
+        title: 'Dispensing Phrases',
+        icon: '💬',
+        desc: '13 commonly used dispensing phrases',
+        type: 'phrases',
+        items: [
+          { en: 'Take one tablet two times a day.', t: '每天服用一片，一天两次。', r: 'Měitiān fúyòng yī piàn, yītiān liǎng cì.' },
+          { en: 'With food', t: '随餐服用', r: 'Suí cān fúyòng' },
+          { en: 'Without food', t: '空腹服用', r: 'Kōngfù fúyòng' },
+          { en: 'Take this on an empty stomach.', t: '请空腹服用此药。', r: 'Qǐng kōngfù fúyòng cǐ yào.' },
+          { en: 'Complete the full course even if you feel better.', t: '即使感觉好转，也要完成整个疗程。', r: 'Jíshǐ gǎnjué hǎozhuǎn, yě yào wánchéng zhěnggè liáochéng.' },
+          { en: 'Take with plenty of water.', t: '服药时请多喝水。', r: 'Fú yào shí qǐng duō hē shuǐ.' },
+          { en: 'Store in a cool, dry place.', t: '请存放在阴凉干燥处。', r: 'Qǐng cúnfàng zài yīnliáng gānzào chù.' },
+          { en: 'Avoid alcohol.', t: '请勿饮酒。', r: 'Qǐng wù yǐnjiǔ.' },
+          { en: 'This may cause drowsiness.', t: '此药可能会导致嗜睡。', r: 'Cǐ yào kěnéng huì dǎozhì shìshuì.' },
+          { en: 'Avoid driving or operating machinery.', t: '请勿驾车或操作机械。', r: 'Qǐng wù jiàchē huò cāozuò jīxiè.' },
+          { en: 'This medication needs to be stored in the fridge.', t: '此药需冷藏保存。', r: 'Cǐ yào xū lěngcáng bǎocún.' },
+          { en: "If you forget a dose, take it as soon as you remember unless it's nearly time for the next one.", t: '如果忘记服药，请尽快补服，但若接近下次服药时间则跳过。', r: 'Rúguǒ wàngjì fú yào, qǐng jǐn kuài bǔ fú, dàn ruò jiējìn xià cì fú yào shíjiān zé tiàoguò.' },
+          { en: 'Take one tablet one time a day at the same time everyday.', t: '每天同一时间服用一片，一天一次。', r: 'Měitiān tóngyī shíjiān fúyòng yī piàn, yītiān yī cì.' }
+        ]
+      },
+      {
+        id: 'conditions',
+        title: 'Conditions',
+        icon: '🏥',
+        desc: 'Medical conditions A–Z',
+        type: 'conditions',
+        subs: [
+          {
+            label: 'A',
+            items: [
+              { en: 'Allergy', t: '过敏', r: 'Guòmǐn' },
+              { en: 'Asthma', t: '哮喘', r: 'Xiāochuǎn' },
+              { en: 'Arthritis', t: '关节炎', r: 'Guānjiéyán' },
+              { en: 'Anxiety', t: '焦虑症', r: 'Jiāolǜ zhèng' },
+            ]
+          },
+          {
+            label: 'B',
+            items: [
+              { en: 'Blood pressure (high)', t: '高血压', r: 'Gāo xuèyā' },
+              { en: 'Blood pressure (low)', t: '低血压', r: 'Dī xuèyā' },
+            ]
+          },
+          {
+            label: 'C',
+            items: [
+              { en: 'Cough', t: '咳嗽', r: 'Késòu' },
+              { en: 'Cold', t: '感冒', r: 'Gǎnmào' },
+              { en: 'Constipation', t: '便秘', r: 'Biànmì' },
+              { en: 'Cholesterol (high)', t: '高胆固醇', r: 'Gāo dǎngùchún' },
+            ]
+          },
+          {
+            label: 'D',
+            items: [
+              { en: 'Diabetes', t: '糖尿病', r: 'Tángniàobìng' },
+              { en: 'Diarrhoea', t: '腹泻', r: 'Fùxiè' },
+              { en: 'Dizziness', t: '头晕', r: 'Tóuyūn' },
+            ]
+          },
+          {
+            label: 'E-F',
+            items: [
+              { en: 'Eczema', t: '湿疹', r: 'Shīzhěn' },
+              { en: 'Fever', t: '发烧', r: 'Fāshāo' },
+              { en: 'Fungal infection', t: '真菌感染', r: 'Zhēnjūn gǎnrǎn' },
+            ]
+          },
+          {
+            label: 'G-H',
+            items: [
+              { en: 'Gastric pain', t: '胃痛', r: 'Wèitòng' },
+              { en: 'Headache', t: '头痛', r: 'Tóutòng' },
+              { en: 'Heart disease', t: '心脏病', r: 'Xīnzàngbìng' },
+            ]
+          },
+          {
+            label: 'I-P',
+            items: [
+              { en: 'Infection', t: '感染', r: 'Gǎnrǎn' },
+              { en: 'Insomnia', t: '失眠', r: 'Shīmián' },
+              { en: 'Nausea', t: '恶心', r: 'Ěxīn' },
+              { en: 'Pain', t: '疼痛', r: 'Téngtòng' },
+            ]
+          },
+          {
+            label: 'S-V',
+            items: [
+              { en: 'Skin rash', t: '皮疹', r: 'Pízhěn' },
+              { en: 'Sore throat', t: '喉咙痛', r: 'Hóulóng tòng' },
+              { en: 'Thyroid disorder', t: '甲状腺疾病', r: 'Jiǎzhuàngxiàn jíbìng' },
+              { en: 'Urinary tract infection', t: '尿道感染', r: 'Niàodào gǎnrǎn' },
+              { en: 'Vomiting', t: '呕吐', r: 'Ǒutù' },
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  malay: {
+    lang: 'ms-MY',
+    label: 'Malay (Bahasa Melayu)',
+    modules: [
+      {
+        id: 'greetings',
+        title: 'Greetings',
+        icon: '👋',
+        desc: '8 essential greeting phrases',
+        type: 'phrases',
+        items: [
+          { en: 'Good morning', t: 'Selamat pagi', r: '' },
+          { en: 'Good afternoon', t: 'Selamat tengah hari', r: '' },
+          { en: 'Good evening', t: 'Selamat petang', r: '' },
+          { en: 'Hi, what can I help you with?', t: 'Hai, apa yang boleh saya bantu?', r: '' },
+          { en: 'May I have your name & NRIC number?', t: 'Boleh saya dapatkan nama dan nombor NRIC anda?', r: '' },
+          { en: 'Do you have any allergies?', t: 'Adakah anda mempunyai sebarang alahan?', r: '' },
+          { en: 'Please take a seat first and wait for the same queue number.', t: 'Sila duduk dahulu dan tunggu nombor giliran yang sama.', r: '' },
+          { en: 'Thank you.', t: 'Terima kasih.', r: '' }
+        ]
+      },
+      {
+        id: 'numbers',
+        title: 'Numbers',
+        icon: '🔢',
+        desc: 'Numbers 1 to 20',
+        type: 'numbers',
+        items: [
+          { en: 'One', n: 1, t: 'Satu', r: '' },
+          { en: 'Two', n: 2, t: 'Dua', r: '' },
+          { en: 'Three', n: 3, t: 'Tiga', r: '' },
+          { en: 'Four', n: 4, t: 'Empat', r: '' },
+          { en: 'Five', n: 5, t: 'Lima', r: '' },
+          { en: 'Six', n: 6, t: 'Enam', r: '' },
+          { en: 'Seven', n: 7, t: 'Tujuh', r: '' },
+          { en: 'Eight', n: 8, t: 'Lapan', r: '' },
+          { en: 'Nine', n: 9, t: 'Sembilan', r: '' },
+          { en: 'Ten', n: 10, t: 'Sepuluh', r: '' },
+          { en: 'Eleven', n: 11, t: 'Sebelas', r: '' },
+          { en: 'Twelve', n: 12, t: 'Dua belas', r: '' },
+          { en: 'Thirteen', n: 13, t: 'Tiga belas', r: '' },
+          { en: 'Fourteen', n: 14, t: 'Empat belas', r: '' },
+          { en: 'Fifteen', n: 15, t: 'Lima belas', r: '' },
+          { en: 'Sixteen', n: 16, t: 'Enam belas', r: '' },
+          { en: 'Seventeen', n: 17, t: 'Tujuh belas', r: '' },
+          { en: 'Eighteen', n: 18, t: 'Lapan belas', r: '' },
+          { en: 'Nineteen', n: 19, t: 'Sembilan belas', r: '' },
+          { en: 'Twenty', n: 20, t: 'Dua puluh', r: '' }
+        ]
+      },
+      {
+        id: 'frequency',
+        title: 'Frequency & Duration',
+        icon: '⏰',
+        desc: '13 time & frequency terms',
+        type: 'phrases',
+        items: [
+          { en: 'Morning', t: 'Pagi', r: '' },
+          { en: 'Afternoon', t: 'Tengah hari', r: '' },
+          { en: 'Evening', t: 'Petang', r: '' },
+          { en: 'Night', t: 'Malam', r: '' },
+          { en: 'Day', t: 'Hari', r: '' },
+          { en: 'Hour', t: 'Jam', r: '' },
+          { en: 'Week', t: 'Minggu', r: '' },
+          { en: 'Month', t: 'Bulan', r: '' },
+          { en: 'Year', t: 'Tahun', r: '' },
+          { en: 'Half', t: 'Separuh', r: '' },
+          { en: 'Alternate day', t: 'Setiap dua hari', r: '' },
+          { en: 'Before food', t: 'Sebelum makan', r: '' },
+          { en: 'After food', t: 'Selepas makan', r: '' }
+        ]
+      },
+      {
+        id: 'dispensing',
+        title: 'Dispensing Phrases',
+        icon: '💬',
+        desc: '13 commonly used dispensing phrases',
+        type: 'phrases',
+        items: [
+          { en: 'Take one tablet two times a day.', t: 'Ambil satu tablet dua kali sehari.', r: '' },
+          { en: 'With food', t: 'Bersama makanan', r: '' },
+          { en: 'Without food', t: 'Tanpa makanan', r: '' },
+          { en: 'Take this on an empty stomach.', t: 'Ambil ubat ini ketika perut kosong.', r: '' },
+          { en: 'Complete the full course even if you feel better.', t: 'Habiskan keseluruhan kursus walaupun anda berasa lebih baik.', r: '' },
+          { en: 'Take with plenty of water.', t: 'Ambil dengan banyak air.', r: '' },
+          { en: 'Store in a cool, dry place.', t: 'Simpan di tempat yang sejuk dan kering.', r: '' },
+          { en: 'Avoid alcohol.', t: 'Elakkan alkohol.', r: '' },
+          { en: 'This may cause drowsiness.', t: 'Ini mungkin menyebabkan mengantuk.', r: '' },
+          { en: 'Avoid driving or operating machinery.', t: 'Elakkan memandu atau mengendalikan mesin.', r: '' },
+          { en: 'This medication needs to be stored in the fridge.', t: 'Ubat ini perlu disimpan di dalam peti sejuk.', r: '' },
+          { en: "If you forget a dose, take it as soon as you remember unless it's nearly time for the next one.", t: 'Jika anda terlupa dos, ambillah sebaik sahaja anda ingat melainkan hampir tiba masa dos berikutnya.', r: '' },
+          { en: 'Take one tablet one time a day at the same time everyday.', t: 'Ambil satu tablet sekali sehari pada waktu yang sama setiap hari.', r: '' }
+        ]
+      },
+      {
+        id: 'conditions',
+        title: 'Conditions',
+        icon: '🏥',
+        desc: 'Medical conditions A–Z',
+        type: 'conditions',
+        subs: [
+          {
+            label: 'A',
+            items: [
+              { en: 'Allergy', t: 'Alahan', r: '' },
+              { en: 'Asthma', t: 'Lelah / Asma', r: '' },
+              { en: 'Arthritis', t: 'Artritis / Radang sendi', r: '' },
+              { en: 'Anxiety', t: 'Kebimbangan', r: '' },
+            ]
+          },
+          {
+            label: 'B',
+            items: [
+              { en: 'Blood pressure (high)', t: 'Tekanan darah tinggi', r: '' },
+              { en: 'Blood pressure (low)', t: 'Tekanan darah rendah', r: '' },
+            ]
+          },
+          {
+            label: 'C',
+            items: [
+              { en: 'Cough', t: 'Batuk', r: '' },
+              { en: 'Cold', t: 'Selesema', r: '' },
+              { en: 'Constipation', t: 'Sembelit', r: '' },
+              { en: 'Cholesterol (high)', t: 'Kolesterol tinggi', r: '' },
+            ]
+          },
+          {
+            label: 'D',
+            items: [
+              { en: 'Diabetes', t: 'Kencing manis / Diabetes', r: '' },
+              { en: 'Diarrhoea', t: 'Cirit-birit', r: '' },
+              { en: 'Dizziness', t: 'Pening / Loya kepala', r: '' },
+            ]
+          },
+          {
+            label: 'E-F',
+            items: [
+              { en: 'Eczema', t: 'Ekzema', r: '' },
+              { en: 'Fever', t: 'Demam', r: '' },
+              { en: 'Fungal infection', t: 'Jangkitan kulat', r: '' },
+            ]
+          },
+          {
+            label: 'G-H',
+            items: [
+              { en: 'Gastric pain', t: 'Sakit gastrik', r: '' },
+              { en: 'Headache', t: 'Sakit kepala', r: '' },
+              { en: 'Heart disease', t: 'Penyakit jantung', r: '' },
+            ]
+          },
+          {
+            label: 'I-P',
+            items: [
+              { en: 'Infection', t: 'Jangkitan', r: '' },
+              { en: 'Insomnia', t: 'Insomnia / Tidak boleh tidur', r: '' },
+              { en: 'Nausea', t: 'Loya / Mual', r: '' },
+              { en: 'Pain', t: 'Sakit / Kesakitan', r: '' },
+            ]
+          },
+          {
+            label: 'S-V',
+            items: [
+              { en: 'Skin rash', t: 'Ruam kulit', r: '' },
+              { en: 'Sore throat', t: 'Sakit tekak', r: '' },
+              { en: 'Thyroid disorder', t: 'Masalah tiroid', r: '' },
+              { en: 'Urinary tract infection', t: 'Jangkitan saluran kencing', r: '' },
+              { en: 'Vomiting', t: 'Muntah', r: '' },
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentLang = null;
+let currentModuleIdx = null;
+let progress = {}; // { mandarin: { greetings: { seen: Set, quizDone: bool, score: n } } }
+let quizQuestions = [];
+let quizAnswers = [];
+let currentQuizModule = null;
+let navStack = [];
+
+function getProgress(lang, moduleId) {
+  if (!progress[lang]) progress[lang] = {};
+  if (!progress[lang][moduleId]) progress[lang][moduleId] = { seen: new Set(), quizDone: false, score: 0 };
+  return progress[lang][moduleId];
+}
+
+function getModuleStatus(lang, moduleId, totalItems) {
+  const p = getProgress(lang, moduleId);
+  if (p.quizDone) return 'completed';
+  if (p.seen.size > 0) return 'in-progress';
+  return 'not-started';
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const backBtn = document.getElementById('backBtn');
+  backBtn.style.display = id === 'langPage' ? 'none' : 'block';
+}
+
+function goBack() {
+  if (navStack.length > 0) {
+    const prev = navStack.pop();
+    prev();
+  } else {
+    showLangPage();
+  }
+}
+
+function showLangPage() {
+  navStack = [];
+  currentLang = null;
+  showPage('langPage');
+}
+
+function selectLang(lang) {
+  currentLang = lang;
+  navStack = [showLangPage];
+  showModulePage();
+}
+
+function showModulePage() {
+  const data = CONTENT[currentLang];
+  document.getElementById('modulePageTitle').textContent = data.label + ' — Modules';
+  renderModuleGrid();
+  renderOverallProgress();
+  showPage('modulePage');
+}
+
+function renderOverallProgress() {
+  const data = CONTENT[currentLang];
+  const container = document.getElementById('moduleIndicators');
+  container.innerHTML = '';
+  data.modules.forEach(mod => {
+    const allItems = mod.type === 'conditions'
+      ? mod.subs.flatMap(s => s.items)
+      : mod.items;
+    const status = getModuleStatus(currentLang, mod.id, allItems.length);
+    const badge = document.createElement('span');
+    badge.className = 'mod-badge ' + (status === 'completed' ? 'completed' : status === 'in-progress' ? 'in-progress' : 'not-started');
+    badge.textContent = (status === 'completed' ? '✓ ' : status === 'in-progress' ? '⟳ ' : '○ ') + mod.title;
+    container.appendChild(badge);
+  });
+}
+
+function renderModuleGrid() {
+  const data = CONTENT[currentLang];
+  const grid = document.getElementById('moduleGrid');
+  grid.innerHTML = '';
+  data.modules.forEach((mod, idx) => {
+    const allItems = mod.type === 'conditions'
+      ? mod.subs.flatMap(s => s.items)
+      : mod.items;
+    const status = getModuleStatus(currentLang, mod.id, allItems.length);
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    card.innerHTML = `
+      <div class="m-icon">${mod.icon}</div>
+      <h3>${mod.title}</h3>
+      <p>${mod.desc}</p>
+      <span class="status-badge ${status === 'completed' ? 'status-done' : status === 'in-progress' ? 'status-progress' : 'status-not'}">
+        ${status === 'completed' ? '✓ Completed' : status === 'in-progress' ? '⟳ In Progress' : '○ Not Started'}
+      </span>
+    `;
+    card.onclick = () => openModule(idx);
+    grid.appendChild(card);
+  });
+}
+
+function openModule(idx) {
+  currentModuleIdx = idx;
+  const mod = CONTENT[currentLang].modules[idx];
+  navStack.push(showModulePage);
+  renderLearnPage(mod);
+  showPage('learnPage');
+}
+
+// ─────────────────────────────────────────────
+// LEARNING PAGE
+// ─────────────────────────────────────────────
+function renderLearnPage(mod) {
+  document.getElementById('learnTitle').textContent = mod.icon + ' ' + mod.title;
+  document.getElementById('learnSubtitle').textContent = CONTENT[currentLang].label;
+  const container = document.getElementById('learnContent');
+  container.innerHTML = '';
+
+  const allItems = mod.type === 'conditions' ? mod.subs.flatMap(s => s.items) : mod.items;
+  const p = getProgress(currentLang, mod.id);
+  updateProgressBar(p.seen.size, allItems.length);
+
+  if (mod.type === 'phrases') {
+    renderPhraseList(container, mod.items, mod.id);
+  } else if (mod.type === 'numbers') {
+    renderNumbers(container, mod.items, mod.id);
+  } else if (mod.type === 'conditions') {
+    renderConditions(container, mod.subs, mod.id);
+  }
+}
+
+function updateProgressBar(seen, total) {
+  const pct = total > 0 ? Math.round((seen / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '%';
+}
+
+function markSeen(moduleId, key) {
+  const p = getProgress(currentLang, moduleId);
+  p.seen.add(key);
+  const mod = CONTENT[currentLang].modules.find(m => m.id === moduleId);
+  const allItems = mod.type === 'conditions' ? mod.subs.flatMap(s => s.items) : mod.items;
+  updateProgressBar(p.seen.size, allItems.length);
+}
+
+function renderPhraseList(container, items, moduleId) {
+  const list = document.createElement('div');
+  list.className = 'phrase-list';
+  items.forEach((item, i) => {
+    const card = createPhraseCard(item, i, moduleId, item.t);
+    list.appendChild(card);
+  });
+  container.appendChild(list);
+}
+
+function createPhraseCard(item, i, moduleId, speakText) {
+  const p = getProgress(currentLang, moduleId);
+  const card = document.createElement('div');
+  card.className = 'phrase-card' + (p.seen.has(i.toString()) ? ' seen' : '');
+  const langCode = CONTENT[currentLang].lang;
+  card.innerHTML = `
+    <div class="phrase-num">${i + 1}</div>
+    <div class="phrase-text">
+      <div class="english">${item.en}</div>
+      <div class="translation">${item.t}</div>
+      ${item.r ? `<div class="romanized">${item.r}</div>` : ''}
+    </div>
+    <button class="speak-btn" title="Listen to pronunciation">🔊</button>
+  `;
+  card.querySelector('.speak-btn').addEventListener('click', () => {
+    speak(speakText, langCode);
+    markSeen(moduleId, i.toString());
+    card.classList.add('seen');
+  });
+  return card;
+}
+
+function renderNumbers(container, items, moduleId) {
+  const grid = document.createElement('div');
+  grid.className = 'numbers-grid';
+  const langCode = CONTENT[currentLang].lang;
+  items.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'num-card';
+    card.innerHTML = `
+      <div class="num-en">${item.en}</div>
+      <div class="num-digit">${item.n}</div>
+      <div class="num-trans">${item.t}</div>
+      ${item.r ? `<div class="num-rom">${item.r}</div>` : ''}
+      <div style="font-size:0.75rem;color:var(--teal);margin-top:6px;">🔊 tap to listen</div>
+    `;
+    card.addEventListener('click', () => {
+      speak(item.t, langCode);
+      markSeen(moduleId, i.toString());
+      card.style.borderColor = 'var(--teal)';
+      card.style.background = '#eef9f9';
+    });
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
+}
+
+function renderConditions(container, subs, moduleId) {
+  // Tabs
+  const tabs = document.createElement('div');
+  tabs.className = 'conditions-tabs';
+  const contentArea = document.createElement('div');
+
+  subs.forEach((sub, si) => {
+    const tab = document.createElement('button');
+    tab.className = 'cond-tab' + (si === 0 ? ' active' : '');
+    tab.textContent = sub.label;
+    tab.addEventListener('click', () => {
+      tabs.querySelectorAll('.cond-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderConditionSub(contentArea, sub, moduleId, subs[0]);
+      // offset seen index
+    });
+    tabs.appendChild(tab);
+  });
+  container.appendChild(tabs);
+  container.appendChild(contentArea);
+
+  // Render first tab
+  renderConditionSub(contentArea, subs[0], moduleId, subs[0]);
+}
+
+function renderConditionSub(container, sub, moduleId, firstSub) {
+  container.innerHTML = '';
+  const allSubs = CONTENT[currentLang].modules.find(m => m.id === moduleId).subs;
+  const list = document.createElement('div');
+  list.className = 'phrase-list';
+  let offset = 0;
+  allSubs.forEach(s => {
+    if (s.label === sub.label) return;
+    if (allSubs.indexOf(s) < allSubs.indexOf(sub)) offset += s.items.length;
+  });
+  sub.items.forEach((item, i) => {
+    const globalIdx = offset + i;
+    const card = createPhraseCard(item, globalIdx, moduleId, item.t);
+    list.appendChild(card);
+  });
+  container.appendChild(list);
+}
+
+// ─────────────────────────────────────────────
+// SPEECH — Edge-optimised with Microsoft neural voice preference
+// ─────────────────────────────────────────────
+
+// Cache of available voices, populated once they load
+let _voiceCache = null;
+
+function getVoices() {
+  return new Promise(resolve => {
+    const voices = speechSynthesis.getVoices();
+    if (voices.length > 0) { resolve(voices); return; }
+    // Edge/Chrome may load voices async
+    speechSynthesis.addEventListener('voiceschanged', function handler() {
+      speechSynthesis.removeEventListener('voiceschanged', handler);
+      resolve(speechSynthesis.getVoices());
+    });
+    // Fallback timeout
+    setTimeout(() => resolve(speechSynthesis.getVoices()), 1000);
+  });
+}
+
+// Preferred Microsoft neural voices per language code
+const PREFERRED_VOICES = {
+  'zh-CN': [
+    'Microsoft Xiaoxiao Online (Natural) - Chinese (Mainland)',
+    'Microsoft Yunyang Online (Natural) - Chinese (Mainland)',
+    'Microsoft Xiaoyi Online (Natural) - Chinese (Mainland)',
+    'Microsoft Xiaoxiao - Chinese (Simplified, China)',
+    'Microsoft Huihui - Chinese (Simplified, China)',
+    'Microsoft Kangkang - Chinese (Simplified, China)',
+    'Google 普通话（中国大陆）'
+  ],
+  'ms-MY': [
+    'Microsoft Yasmin Online (Natural) - Malay (Malaysia)',
+    'Microsoft Osman Online (Natural) - Malay (Malaysia)',
+    'Microsoft Yasmin - Malay (Malaysia)',
+    'Microsoft Osman - Malay (Malaysia)'
+  ]
+};
+
+async function speak(text, lang) {
+  if (!window.speechSynthesis) {
+    console.warn('Web Speech API not supported in this browser.');
+    return;
+  }
+  speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang;
+  utter.rate = 0.82;
+  utter.pitch = 1.0;
+
+  try {
+    const voices = await getVoices();
+    const preferred = PREFERRED_VOICES[lang] || [];
+    let chosen = null;
+
+    // 1. Try exact Microsoft neural voice match by name
+    for (const name of preferred) {
+      chosen = voices.find(v => v.name === name);
+      if (chosen) break;
+    }
+
+    // 2. Fallback: any Microsoft voice matching the language
+    if (!chosen) {
+      chosen = voices.find(v =>
+        v.lang.startsWith(lang.split('-')[0]) &&
+        v.name.toLowerCase().includes('microsoft')
+      );
+    }
+
+    // 3. Fallback: any voice matching the language
+    if (!chosen) {
+      chosen = voices.find(v => v.lang === lang) ||
+               voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+    }
+
+    if (chosen) utter.voice = chosen;
+  } catch (e) {
+    // Silently fall back to browser default
+  }
+
+  speechSynthesis.speak(utter);
+}
+
+// ─────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────
+function startQuiz() {
+  const mod = CONTENT[currentLang].modules[currentModuleIdx];
+  currentQuizModule = mod;
+  navStack.push(() => {
+    const m = CONTENT[currentLang].modules[currentModuleIdx];
+    renderLearnPage(m);
+    showPage('learnPage');
+  });
+
+  const allItems = mod.type === 'conditions'
+    ? mod.subs.flatMap(s => s.items)
+    : mod.items;
+
+  quizQuestions = generateQuizQuestions(allItems, mod, 10);
+  quizAnswers = new Array(quizQuestions.length).fill(null);
+  renderQuiz();
+  showPage('quizPage');
+}
+
+function generateQuizQuestions(items, mod, count) {
+  const shuffled = [...items].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+  const langCode = CONTENT[currentLang].lang;
+
+  return selected.map((item, qi) => {
+    const isAudio = qi % 3 === 2 && item.t; // every 3rd question is audio-based
+    // Generate 3 wrong options from other items
+    const wrong = items.filter(x => x.t !== item.t).sort(() => Math.random() - 0.5).slice(0, 3);
+    const options = [item, ...wrong].sort(() => Math.random() - 0.5);
+
+    if (isAudio) {
+      return {
+        type: 'audio',
+        prompt: item.t,
+        promptLang: langCode,
+        question: 'Listen to the audio and select the correct English phrase:',
+        answer: item.en,
+        options: options.map(o => o.en)
+      };
+    } else {
+      return {
+        type: 'mc',
+        question: `What is the ${CONTENT[currentLang].label.split(' ')[0]} translation for: "${item.en}"?`,
+        answer: item.t,
+        options: options.map(o => o.t)
+      };
+    }
+  });
+}
+
+function renderQuiz() {
+  const mod = currentQuizModule;
+  document.getElementById('quizMeta').textContent = `${mod.title} · ${quizQuestions.length} Questions`;
+  const container = document.getElementById('quizContent');
+  container.innerHTML = '';
+
+  quizQuestions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'q-' + qi;
+
+    let html = `<div class="q-type">${q.type === 'audio' ? '🔊 Audio Question' : '📝 Multiple Choice'} · Q${qi + 1}</div>`;
+    html += `<div class="q-text">${q.question}</div>`;
+
+    if (q.type === 'audio') {
+      html += `<button class="audio-prompt" onclick="speak('${q.prompt.replace(/'/g, "\\'")}', '${q.promptLang}')">🔊 Play Audio</button>`;
+    }
+
+    html += `<div class="options" id="opts-${qi}">`;
+    q.options.forEach((opt, oi) => {
+      html += `<button class="option-btn" id="opt-${qi}-${oi}" onclick="selectAnswer(${qi}, ${oi})">${opt}</button>`;
+    });
+    html += '</div>';
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+
+  const nav = document.createElement('div');
+  nav.className = 'quiz-nav';
+  nav.innerHTML = `<span style="color:var(--muted);font-size:0.85rem;">${quizQuestions.length} questions</span>
+    <button id="submitQuizBtn" onclick="submitQuiz()">Submit Quiz ✓</button>`;
+  container.appendChild(nav);
+}
+
+function selectAnswer(qi, oi) {
+  const q = quizQuestions[qi];
+  quizAnswers[qi] = q.options[oi];
+  // Highlight selection
+  document.querySelectorAll(`#opts-${qi} .option-btn`).forEach((btn, i) => {
+    btn.style.borderColor = i === oi ? 'var(--navy)' : '';
+    btn.style.background = i === oi ? '#eef4ff' : '';
+  });
+}
+
+function submitQuiz() {
+  let score = 0;
+  quizQuestions.forEach((q, qi) => {
+    const opts = document.querySelectorAll(`#opts-${qi} .option-btn`);
+    opts.forEach((btn, oi) => {
+      btn.disabled = true;
+      if (q.options[oi] === q.answer) btn.classList.add('correct');
+      else if (q.options[oi] === quizAnswers[qi]) btn.classList.add('wrong');
+    });
+    if (quizAnswers[qi] === q.answer) score++;
+  });
+
+  // Record progress
+  const p = getProgress(currentLang, currentQuizModule.id);
+  p.quizDone = true;
+  p.score = score;
+
+  // Show result after delay
+  setTimeout(() => showQuizResult(score, quizQuestions.length), 400);
+}
+
+function showQuizResult(score, total) {
+  const pct = Math.round((score / total) * 100);
+  const container = document.getElementById('quizContent');
+  container.innerHTML = `
+    <div class="quiz-result">
+      <div class="score-circle">${pct}%</div>
+      <h3>${score >= 7 ? '🎉 Well Done!' : score >= 5 ? '👍 Good Effort!' : '💪 Keep Practising!'}</h3>
+      <p>You scored <strong>${score} out of ${total}</strong> questions correctly.</p>
+      <p style="margin-bottom:20px;">${pct >= 80 ? 'Excellent work! You have mastered this module.' : 'Review the phrases and try again to improve your score.'}</p>
+      <button onclick="retakeQuiz()">🔄 Retake Quiz</button>
+      <button onclick="goBackToModule()">📚 Back to Module</button>
+    </div>
+  `;
+}
+
+function retakeQuiz() {
+  const p = getProgress(currentLang, currentQuizModule.id);
+  p.quizDone = false;
+  quizAnswers = new Array(quizQuestions.length).fill(null);
+  quizQuestions = generateQuizQuestions(
+    currentQuizModule.type === 'conditions'
+      ? currentQuizModule.subs.flatMap(s => s.items)
+      : currentQuizModule.items,
+    currentQuizModule,
+    10
+  );
+  renderQuiz();
+}
+
+function goBackToModule() {
+  navStack.pop()();
+}
+</script>
+</body>
+</html>
